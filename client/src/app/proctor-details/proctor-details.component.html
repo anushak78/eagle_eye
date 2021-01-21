@@ -1,0 +1,368 @@
+<ul class="breadcrumb">
+    <li class="breadcrumb-item"><a (click)="goto('dashboard')">Venue List</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Proctor View</li>
+</ul>
+
+<div class="box-container">
+    <div class="grid-2">
+        <div>
+            <h2 class="mat-h2">Live Streaming - {{name}}</h2>
+        </div>
+        <div class="right" [hidden]="zenchecked">
+            <mat-slide-toggle matTooltip="Switch to zen mode" color="primary" [(ngModel)]="zenchecked"
+                (change)="zenMode()">
+            </mat-slide-toggle>
+        </div>
+    </div>
+    <div class="grid-3">
+        <div></div>
+        <div class="center">
+            <mat-form-field class="search">
+                <mat-label>Search</mat-label>
+                <input matInput placeholder="Search">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+        <div class="right">
+            <button mat-button (click)="openDialogWithTemplateRef(layouts)">
+                <mat-icon matTooltip="Change layout">dashboard</mat-icon>
+            </button>
+            <button mat-button (click)="openChatBroadCast()">
+                <mat-icon matTooltip="Broadcast message">speaker_phone</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="example-container" [ngClass]="{'full-screen': zenchecked}">
+
+        <mat-grid-list [cols]="breakpoint" *ngIf="view == 'tiled'" rowHeight="3:2">
+            <ng-container *ngFor="let cand of candidates;let i = index">
+                <mat-grid-tile [ngClass]="{'flagged': cand.flag, 'unflagged': !cand.flag}">
+                    <div class="box-container">
+                        <iframe src="https://www.youtube.com/embed/9ao4FEaDGhQ" frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                        <div class="grid-3">
+                            <div class="left" (click)="tileElementClicked(i)">
+                                <button mat-button class="{{cand.msg}}"
+                                    *ngIf="(!cand.pause && cand.msg == 'Approved') || (cand.msg == 'Pending')">
+                                    {{cand.msg}}
+                                </button>
+                                <button mat-button class="pause" style="font-size: small!important;"
+                                    *ngIf="cand.pause && cand.msg == 'Approved'">Exam
+                                    Paused</button>
+                            </div>
+                            <div class="center">Default {{cand.name}}</div>
+                            <div class="right">
+                                <a [matMenuTriggerFor]="menuTiled" (click)="setSelectedCandidate(i)">
+                                    <mat-icon>more_vert</mat-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </mat-grid-tile>
+                <mat-menu #menuTiled="matMenu">
+                    <button mat-button (click)="pauseClicked(pauseReason)" [disabled]="cand.pause">
+                        <mat-icon [inline]="true">pause</mat-icon> Pause (shift + P)
+                    </button>
+                    <hr>
+                    <button mat-button (click)="pauseClicked(pauseReason)" [disabled]="!cand.pause">
+                        <mat-icon [inline]="true">play_arrow</mat-icon> Resume (shift + R)
+                    </button>
+                    <hr>
+                    <button mat-button (click)="openChat()" [disabled]="!cand.pause">
+                        <mat-icon [inline]="true">chat</mat-icon> Chat (shift + C)
+                    </button>
+                    <hr>
+                    <button mat-button (click)="openLogs('logs')">
+                        <mat-icon>insert_drive_file</mat-icon> Logs (shift + L)
+                    </button>
+                    <hr>
+                    <button mat-button>
+                        <mat-icon>volume_up</mat-icon> Audio (shift + S)
+                    </button>
+                </mat-menu>
+            </ng-container>
+        </mat-grid-list>
+
+        <div *ngIf="view == 'spotlight'">
+            <div [ngClass]="{'grid-2': logsOpen}">
+                <div class="border">
+                    <div style="height: 350px;width: auto;">
+                        <iframe src="https://www.youtube.com/embed/9ao4FEaDGhQ" frameborder="0" class="spotlight-iframe"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            height="100%" width="100%"
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="grid-3">
+                        <div *ngIf="selectedCandidate.msg != 'Approved'">
+                            <button mat-raised-button class="{{selectedCandidate.msg}}" (click)="openPending('photo')"
+                                *ngIf="(!selectedCandidate.pause && selectedCandidate.msg == 'Approved') || (selectedCandidate.msg == 'Pending')">
+                                {{selectedCandidate.msg}}
+                                <mat-icon *ngIf="!photoOpen">keyboard_arrow_down</mat-icon>
+                                <mat-icon *ngIf="photoOpen">keyboard_arrow_up</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="selectedCandidate.msg == 'Approved'">
+                            <button mat-raised-button class="{{selectedCandidate.msg}}"
+                                *ngIf="(!selectedCandidate.pause && selectedCandidate.msg == 'Approved') || (selectedCandidate.msg == 'Pending')">
+                                {{selectedCandidate.msg}}
+                            </button>
+                            <button mat-raised-button class="pause"
+                                *ngIf="selectedCandidate.pause && selectedCandidate.msg == 'Approved'">Exam
+                                Paused</button>
+                        </div>
+                        <div class="center">
+                            Default {{selectedCandidate.name}}
+                        </div>
+                        <div class="right">
+                            <a [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-container" *ngIf="logsOpen">
+                    <div class="right">
+                        <a (click)="openLogs('close')">
+                            <mat-icon>close</mat-icon>
+                        </a>
+                    </div>
+                    <div>
+                        <h2 class="mat-h2">Logs</h2>
+                        <div style="overflow-y: auto;">
+                            <div class="log-grid-2">
+                                <h3>Timestamp</h3>
+                                <h3>Activity</h3>
+                            </div>
+                            <div *ngFor="let clog of candidateLogs">
+                                <div class="log-grid-2">
+                                    <div>{{clog.time}}</div>
+                                    <div>{{clog.log}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="border" *ngIf="selectedCandidate.pause_reason || selectedCandidate.pause_reason != ''">
+                <h3 class="mat-h3">Reason for Pause</h3>
+                <hr>
+                {{selectedCandidate.pause_reason}}
+            </div>
+        </div>
+
+        <div class="candidate-grid-2" *ngIf="view == 'sidebar'">
+            <div style="height:400px">
+                <div [ngClass]="{'grid-2': logsOpen}">
+                    <div class="border">
+                        <div style="height: 350px;width: auto;">
+                            <iframe src="https://www.youtube.com/embed/9ao4FEaDGhQ" frameborder="0"
+                                class="spotlight-iframe"
+                                height="100%" width="100%"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="grid-3">
+                            <div *ngIf="selectedCandidate.msg != 'Approved'">
+                                <button mat-raised-button class="{{selectedCandidate.msg}}"
+                                    (click)="openPending('photo')"
+                                    *ngIf="(!selectedCandidate.pause && selectedCandidate.msg == 'Approved') || (selectedCandidate.msg == 'Pending')">
+                                    {{selectedCandidate.msg}}
+                                    <mat-icon *ngIf="!photoOpen">keyboard_arrow_down</mat-icon>
+                                    <mat-icon *ngIf="photoOpen">keyboard_arrow_up</mat-icon>
+                                </button>
+                            </div>
+                            <div *ngIf="selectedCandidate.msg == 'Approved'">
+                                <button mat-raised-button class="{{selectedCandidate.msg}}"
+                                    *ngIf="(!selectedCandidate.pause && selectedCandidate.msg == 'Approved') || (selectedCandidate.msg == 'Pending')">
+                                    {{selectedCandidate.msg}}
+                                </button>
+                                <button mat-raised-button class="pause"
+                                    *ngIf="selectedCandidate.pause && selectedCandidate.msg == 'Approved'">Exam
+                                    Paused</button>
+                            </div>
+                            <div class="center">
+                                Default {{selectedCandidate.name}}
+                            </div>
+                            <div class="right">
+                                <a [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-container" *ngIf="logsOpen">
+                        <div class="right">
+                            <a (click)="openLogs('close')">
+                                <mat-icon>close</mat-icon>
+                            </a>
+                        </div>
+                        <div>
+                            <h2 class="mat-h2">Logs</h2>
+                            <div style="overflow-y: auto;">
+                                <div class="log-grid-2">
+                                    <h3>Timestamp</h3>
+                                    <h3>Activity</h3>
+                                </div>
+                                <div *ngFor="let clog of candidateLogs">
+                                    <div class="log-grid-2">
+                                        <div>{{clog.time}}</div>
+                                        <div>{{clog.log}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="border" *ngIf="selectedCandidate.pause_reason || selectedCandidate.pause_reason != ''">
+                    <h3 class="mat-h3">Reason for Pause</h3>
+                    <hr>
+                    {{selectedCandidate.pause_reason}}
+                </div>
+            </div>
+            <div class="sidelayout">
+                <div *ngFor="let cand of candidates;let i = index">
+                    <div [ngClass]="{'border' : cand.selected}" (click)="setSelectedCandidate(i)">
+                        <div>
+                            <div class="center">
+                                <iframe width="200" height="100" src="https://www.youtube.com/embed/9ao4FEaDGhQ"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                            </div>
+                            <div class="grid-2">
+                                <div>
+                                    <button mat-button>Default {{cand.name}}</button>
+                                </div>
+                                <div class="right">
+                                    <button class="{{cand.msg}} mat-footer-sidebar">{{cand.msg}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="box-container footer" *ngIf="photoOpen">
+    <div class="left">
+        <a (click)="openPending('close')">
+            <mat-icon>close</mat-icon>
+        </a>
+    </div>
+    <div>
+        <div class="center">
+            <figure>
+                <img src="../../assets/candidate.png" height="100px" width="auto">
+                <figcaption>Exam day selfie</figcaption>
+            </figure>
+        </div>
+        <div class="center">
+            <figure>
+                <img src="../../assets/candidate.png" height="100px" width="auto">
+                <figcaption>Photo</figcaption>
+            </figure>
+        </div>
+        <div class="center">
+            <figure>
+                <img src="../../assets/id.png" height="100px" width="auto">
+                <figcaption>ID Card</figcaption>
+            </figure>
+        </div>
+        <div class="grid-3">
+            <div class="center">
+                <button mat-raised-button color="primary">Approve</button>
+            </div>
+            <div class="center">
+                <button mat-raised-button color="warn">Reject</button>
+            </div>
+            <div class="center">
+                <button mat-mini-fab color="default" matTooltip="Chat with the candidate(press 'Shift+C')"
+                    (click)="openChat()">
+                    <mat-icon>chat</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #layouts>
+    <div class="grid-2">
+        <h2 matDialogTitle>Layouts</h2>
+        <div class="right">
+            <a matDialogClose>
+                <mat-icon>close</mat-icon>
+            </a>
+        </div>
+    </div>
+    <mat-dialog-content>
+        <div class="grid-3">
+            <div (click)="changeView('tiled')">
+                <mat-card matTooltip="Tiled Layout">
+                    <mat-card-content>
+                        <img src="../../assets/tiled.png" height="100px" width="auto">
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div (click)="changeView('sidebar')">
+                <mat-card matTooltip="Sidebar Layout">
+                    <mat-card-content>
+                        <img src="../../assets/sidebar.png" height="100px" width="auto">
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div (click)="changeView('spotlight')">
+                <mat-card matTooltip="Spotlight Layout">
+                    <mat-card-content>
+                        <img src="../../assets/spotlight.png" height="100px" width="auto">
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </mat-dialog-content>
+</ng-template>
+
+<ng-template #pauseReason>
+    <h2 matDialogTitle>Reason for pause</h2>
+    <mat-dialog-content>
+        <mat-form-field>
+            <mat-label>Reason</mat-label>
+            <textarea matInput placeholder="Enter reason here" [(ngModel)]="selectedCandidate.pause_reason"
+                name="pause_reason"></textarea>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button color="primary" (click)="pauseMessageSaved()">OK</button>
+    </mat-dialog-actions>
+</ng-template>
+
+
+<mat-menu #menu="matMenu">
+    <button mat-button (click)="pauseClicked(pauseReason)" [disabled]="selectedCandidate.pause">
+        <mat-icon [inline]="true">pause</mat-icon> Pause (shift + P)
+    </button>
+    <hr>
+    <button mat-button (click)="pauseClicked(pauseReason)" [disabled]="!selectedCandidate.pause">
+        <mat-icon [inline]="true">play_arrow</mat-icon> Resume (shift + R)
+    </button>
+    <hr>
+    <button mat-button (click)="openChat()" [disabled]="!selectedCandidate.pause">
+        <mat-icon [inline]="true">chat</mat-icon> Chat (shift + C)
+    </button>
+    <hr>
+    <button mat-button (click)="openLogs('logs')">
+        <mat-icon>insert_drive_file</mat-icon> Logs (shift + L)
+    </button>
+    <hr>
+    <button mat-button>
+        <mat-icon>volume_up</mat-icon> Audio (shift + S)
+    </button>
+</mat-menu>
+
+<!--Chat interface-->
+
+<app-chat-template #chatTemplate></app-chat-template>

@@ -1,0 +1,66 @@
+<mat-expansion-panel expanded="true" hideToggle="true" disabled="true">
+    <div [hidden]="forgot_email">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Forgot Password
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form [formGroup]="forgot" (keyup.enter)="forgotPass()">
+            <mat-form-field>
+                <input matInput type="email" placeholder="Enter User ID" formControlName="user_id">
+            </mat-form-field>
+            <div class="button">
+                <button type="button" [routerLink]="['/login']" mat-raised-button color="primary">Cancel</button>
+                <button type="button" [disabled]="!forgot.valid" (click)="forgotPass()" style="margin-left:10px;"
+                    mat-raised-button color="primary">next
+                </button>
+            </div>
+        </form>
+    </div>
+    <div [hidden]="Otp">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Otp verification
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form [formGroup]="otp" (keyup.enter)="forgotPass()">
+            <div style="color:blue;">
+                **OTP has been send to entered email
+            </div>
+            <mat-form-field>
+                <input matInput type="text" placeholder="Enter OTP" formControlName="otp">
+            </mat-form-field>
+            <div class="button">
+                <button type="button" [routerLink]="['/login']" mat-raised-button color="primary">Cancel</button>
+                <button [disabled]="!otp.valid" (click)="otpSend()" style="margin-left:10px;" mat-raised-button
+                    color="primary" type="button">next
+                </button>
+            </div>
+        </form>
+    </div>
+    <div [hidden]="reset_password">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Reset Password
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form [formGroup]="reset" (keyup.enter)="resetpass()">
+            <mat-form-field>
+                <input matInput type="password" placeholder="Enter password" formControlName="password">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="password" placeholder="Enter confirm password" formControlName="confirmPassword">
+            </mat-form-field>
+            <button type="button" [routerLink]="['/login']" mat-raised-button color="primary">Cancel</button>
+            <button type="button" [disabled]="!reset.valid" (click)="resetpass()" style="margin-left:10px;"
+                mat-raised-button color="primary">Submit
+            </button>
+        </form>
+    </div>
+    <div [hidden]="success">
+        <p>You have successfully reset your password</p>
+        <div>
+            <a [routerLink]="['/login']">Click Here</a> to go in login page
+        </div>
+    </div>
+</mat-expansion-panel>

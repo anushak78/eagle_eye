@@ -1,0 +1,39 @@
+<div *ngFor="let chat of chatbox; let i = index;">
+    <div class="chat-footer" [style.right]="chat.right">
+        <div class="chatbox-grid-2" style="background-color: black; color: white;" (click)="minimizeChat(i)">
+            <div>{{chat.id}}</div>
+            <div class="right">
+                <a (click)="closeChat(i)">
+                    <mat-icon style="font-size: medium!important;">close</mat-icon>
+                </a>
+            </div>
+        </div>
+        <div #scrollChat class="chatbox-body" *ngIf="!chat.minimize">
+            <ul class="chat-msg">
+                <li class="other">By Other User</li>
+                <li class="me" *ngFor="let msg of chat.messages">
+                    {{msg}}
+                </li>
+            </ul>
+        </div>
+        <div class="chatbox-footer" *ngIf="!chat.minimize">
+            <input type="file" accept="image/*" #file hidden="true">
+            <a (click)="file.click()">
+                <mat-icon>image</mat-icon>
+            </a>
+            <mat-form-field>
+                <input matInput placeholder="Send message" (keyup.enter)="pushMessage($event.target.value, i)"
+                    [matMenuTriggerFor]="menuChatMessages" [value]="chat.tempmsg"
+                    (input)="chat.tempmsg=$event.target.value;filterMessages(chat.tempmsg)" name="tempmsg">
+                <mat-icon matSuffix>send</mat-icon>
+            </mat-form-field>
+            <mat-menu #menuChatMessages="matMenu">
+                <div class="center" style="background-color: grey;font-size: small;">Please select a message to send
+                </div>
+                <div *ngFor="let msg of filtered_chat_messages">
+                    <button mat-button (click)="chat.tempmsg=msg">{{msg}}</button>
+                </div>
+            </mat-menu>
+        </div>
+    </div>
+</div>

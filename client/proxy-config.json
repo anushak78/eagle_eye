@@ -1,0 +1,44 @@
+{
+  "/dashboard/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/upload/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/proctor/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/proctorproject/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/candidate/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/batch/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/monitoring/*": {
+    "target": "http://localhost:9090",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

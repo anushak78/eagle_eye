@@ -1,0 +1,80 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~ngx-toastr/toastr';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.width-30 {
+  width: 80% !important;
+}
+.align-right-center-center{
+  text-align: right;
+  align-items: center;
+  align-content: center;
+}
+.mat-buttons{
+  margin: 0 8px !important;
+}
+
+button.submit {
+  font-size: large!important;
+  width: 150px!important;
+  height: auto!important;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+a {
+  cursor: pointer;
+}
+
+.box-container {
+  border: solid 1px #ccc;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+  padding: 15px 15px 15px 15px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  padding-top: 10px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  padding-top: 10px;
+}
+
+button.create-form {
+  background-color: green; 
+  color: white;
+}
+.mt-25{
+  margin-top: 25px
+}
+ul.breadcrumb {
+  padding: 10px 16px;
+  list-style: none;
+}
+ul.breadcrumb li {
+  display: inline;
+}
+ul.breadcrumb li+li:before {
+  padding: 8px;
+  color: black;
+  content: "/\00a0";
+}
+ul.breadcrumb li a {
+  color: red;
+}

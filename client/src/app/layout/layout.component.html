@@ -1,0 +1,83 @@
+<mat-drawer-container class="tp-container">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <div class="header-grid">
+        <div class="sub-header-grid">
+          <div>
+            <button mat-button style="padding:0" (click)="gotoPage('/dashboard')">
+              <span class="header-title">
+                Stargate - Proctor Portal
+              </span>
+            </button>
+          </div>
+          <div style="text-align: right">
+            <button mat-button [matMenuTriggerFor]="menu" class="right-align">
+              <span>{{proctorId}}</span>
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <button mat-button matTooltip="Notifications" (click)="gotoPage('notification')">
+              <mat-icon>notifications</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" aligns="end">
+              <!--<button mat-menu-item>
+                <mat-icon>account_box</mat-icon>
+                <span>My Account</span>
+              </button>-->
+              <!-- <button type="button" mat-raised-button [routerLink]="['/forgot']">Forgot Password?</button> -->
+              <button mat-menu-item (click)="gotoPage('forgot')">
+                <mat-icon>remove_red_eye</mat-icon>
+                <span>Change Password</span>
+              </button>
+              <button mat-menu-item (click)="gotoPage('login')">
+                <mat-icon>remove_circle</mat-icon>
+                <span>Logout</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>
+
+
+<ng-template #forgotPassword>
+  <h2 matDialogTitle>Change Password</h2>
+  <mat-dialog-content>
+    <div class="right" style="color:blue;" *ngIf="forgot_password_flag == 'otp'">
+      **OTP has been send to entered email
+    </div>
+    <div>
+      <div class="field">
+        <mat-form-field *ngIf="forgot_password_flag == 'email'">
+          <input matInput type="email" placeholder="Enter User Email">
+        </mat-form-field>
+      </div>
+      <div class="field">
+        <mat-form-field *ngIf="forgot_password_flag == 'otp'">
+          <input matInput type="text" placeholder="Enter OTP">
+        </mat-form-field>
+      </div>
+      <div class="field">
+        <mat-form-field *ngIf="forgot_password_flag == 'pass'">
+          <input matInput type="password" placeholder="Enter password">
+        </mat-form-field>
+      </div>
+      <div class="field">
+        <mat-form-field *ngIf="forgot_password_flag == 'pass'">
+          <input matInput type="password" placeholder="Enter confirm password">
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" (click)="changePassword()">
+      <span *ngIf="forgot_password_flag != 'pass'">Next</span>
+      <span *ngIf="forgot_password_flag == 'pass'">Submit</span>
+    </button>
+    <button matDialogClose class="mat-button">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

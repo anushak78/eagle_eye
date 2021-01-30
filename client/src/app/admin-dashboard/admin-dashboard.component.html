@@ -1,0 +1,150 @@
+<div class="right" style="padding-bottom: 10px;">
+  <button mat-raised-button color="primary" (click)="openDialogBulkUpload(uploadModule)">Bulk Upload</button>
+</div>
+<div class="box-container">
+  <div class="grid-2">
+    <h2 class="mat-h2">List</h2>
+    <div class="right">
+      <button mat-raised-button color="primary" (click)="openDialogWithTemplateRef(addModule, {})">Add</button>
+    </div>
+  </div>
+  <div>
+    <mat-table #table [dataSource]="table_data">
+
+      <ng-container *ngFor="let disCol of displayedColumns; let colIndex = index" matColumnDef="{{disCol}}">
+        <ng-container *ngIf="disCol != 'edit'">
+          <mat-header-cell *matHeaderCellDef>{{disCol}}</mat-header-cell>
+        </ng-container>
+        <ng-container *ngIf="disCol == 'edit'">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        </ng-container>
+        <mat-cell *matCellDef="let element " style="cursor: default;"
+          (click)="openDialogWithTemplateRef(editModule, element)">
+          <span *ngIf="disCol != 'status'">{{element[disCol]}}</span>
+          <span *ngIf="disCol == 'status'">{{element[disCol] || 'Active'}}</span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+
+  </div>
+</div>
+
+<ng-template #addModule>
+  <div class="grid-2">
+    <h2 matDialogTitle>Add</h2>
+    <a class="right">
+      <mat-icon matDialogClose style="font-size: medium!important;">close</mat-icon>
+    </a>
+  </div>
+  <hr>
+  <mat-dialog-content>
+    <div class="grid-2">
+      <ng-container *ngFor="let disCol of displayedColumns;">
+        <div *ngIf="disCol != 'status' && disCol != 'edit'">
+          <mat-form-field>
+            <input type="text" matInput placeholder="Enter {{disCol}}">
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+  </mat-dialog-content>
+  <hr>
+  <h3 matDialogTitle>List of Venues</h3>
+  <div class="grid-3">
+    <div>
+      <mat-form-field>
+        <input type="text" matInput placeholder="Enter venue ID">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input type="text" matInput placeholder="Enter venue name">
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-mini-fab color="default"><mat-icon>add</mat-icon></button>
+    </div>
+  </div>
+  <hr>
+  <div>
+    <mat-dialog-actions align="center" *ngIf="!set_status">
+      <button mat-raised-button style="background-color: green!important;color: whitesmoke;"
+        (click)="statusSet(true)">Add</button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
+
+<ng-template #editModule>
+  <div class="grid-2">
+    <h2 matDialogTitle>Details</h2>
+    <a class="right">
+      <mat-icon matDialogClose style="font-size: medium!important;">close</mat-icon>
+    </a>
+  </div>
+  <hr>
+  <mat-dialog-content>
+    <div class="grid-2">
+      <ng-container *ngFor="let disCol of displayedColumns;">
+        <div *ngIf="disCol != 'status' && disCol != 'edit'">
+          <span>
+            <span><b>{{disCol}}</b></span> :
+            <span>{{edit_data[disCol]}}</span>
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </mat-dialog-content>
+  <hr>
+  <h3 matDialogTitle>List of Venues</h3>
+  <div class="grid-3">
+    <div>
+      <mat-form-field>
+        <input type="text" matInput placeholder="Enter venue ID">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input type="text" matInput placeholder="Enter venue name">
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-mini-fab color="default"><mat-icon>add</mat-icon></button>
+    </div>
+  </div>
+  <hr>
+  <div>
+    <mat-dialog-actions align="center" *ngIf="!set_status">
+      <button mat-raised-button style="background-color: green!important;color: whitesmoke;"
+        (click)="statusSet(true)">Add</button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
+
+<ng-template #uploadModule>
+  <div class="grid-2">
+    <h2 matDialogTitle>Policy Details</h2>
+    <a class="right">
+      <mat-icon matDialogClose style="font-size: medium!important;">close</mat-icon>
+    </a>
+  </div>
+  <hr>
+  <mat-dialog-content>
+    <div class="center">
+      <form [formGroup]="form">
+        <mat-form-field>
+          <ngx-mat-file-input formControlName="file" [accept]="'.csv'" required placeholder="Select csv file">
+          </ngx-mat-file-input>
+          <mat-icon matSuffix>folder</mat-icon>
+        </mat-form-field>
+        <button (click)="submit()" mat-button color="primary">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+      </form>
+    </div>
+  </mat-dialog-content>
+</ng-template>

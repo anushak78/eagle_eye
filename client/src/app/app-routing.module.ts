@@ -6,6 +6,7 @@ import { AuthGuard } from './auth.guard';
 import { ProctorDetailsComponent } from './proctor-details/proctor-details.component';
 import { ForgotpassComponent } from './forgotpass/forgotpass.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
     component: LayoutComponent,
     canActivateChild: [AuthGuard],
     children: [
+      {
+        path: 'admin-dashboard',
+        component: AdminDashboardComponent,
+      },
       {
         path: 'dashboard',
         component: DashboardComponent,

@@ -45,6 +45,7 @@ import { ForgotpassComponent } from './forgotpass/forgotpass.component';
 import { ChatTemplateComponent } from './chat-template/chat-template.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ProctorDetailsComponent,
     ForgotpassComponent,
     ChatTemplateComponent,
-    DashboardComponent
+    DashboardComponent,
+    AdminDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +83,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatSidenavModule,
     MatListModule,
     MatTabsModule,
-    MaterialFileInputModule,
     MatGridListModule,
     MatTableModule,
     MatDatepickerModule,
@@ -95,6 +96,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     NgChatModule,
     MatSlideToggleModule,
     MatPaginatorModule,
+    MaterialFileInputModule,
     ToastrModule.forRoot({
       maxOpened:2
     })
